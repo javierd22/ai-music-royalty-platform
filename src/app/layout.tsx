@@ -25,18 +25,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-white text-black`}>
-        <header className="border-b">
-          <nav className="mx-auto max-w-4xl px-4 py-3 flex items-center gap-6">
-            <Link href="/" className="font-semibold">AI Music Royalty Platform</Link>
-            <Link href="/upload">Upload</Link>
-            <Link href="/result">Result</Link>
-            <Link href="/dashboard">Dashboard</Link>
+      <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-[#f5efe6] text-zinc-900 antialiased`}>
+        <header className="border-b border-zinc-200/70 bg-[#f7f1e9]/80 backdrop-blur">
+          <nav className="mx-auto max-w-6xl px-4 py-4 flex items-center gap-6">
+            <Link href="/" className="text-lg font-semibold tracking-tight">AI Music Royalty Platform</Link>
+            <div className="ml-auto flex items-center gap-4 text-sm">
+              <Link href="/upload" className="hover:opacity-80">Upload</Link>
+              <Link href="/result" className="hover:opacity-80">Result</Link>
+              <Link href="/dashboard" className="hover:opacity-80">Dashboard</Link>
+            </div>
           </nav>
         </header>
-        <main className="mx-auto max-w-4xl px-4 py-8">
-          {children}
-        </main>
+        <main className="mx-auto max-w-6xl px-4 py-12">{children}</main>
+        <footer className="mx-auto max-w-6xl px-4 py-8 text-xs text-zinc-600">
+          © {new Date().getFullYear()} AI Music Royalty Platform
+        </footer>
       </body>
     </html>
   );

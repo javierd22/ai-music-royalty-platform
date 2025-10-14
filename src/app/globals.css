@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* polish */
+:root { 
+  color-scheme: light; 
+}
+* { 
+  outline-color: #d4af37; 
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
