@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 type Match = { trackTitle: string; artist: string; similarity: number; percentInfluence: number };
-type Result = { fileName: string; mockMatches: Match[]; royaltyEvent: any; at: number };
+type RoyaltyEvent = { outputId: string; amountCents: number; splits: { trackTitle: string; artist: string; percent: number }[] };
+type Result = { fileName: string; mockMatches: Match[]; royaltyEvent: RoyaltyEvent; at: number };
 
 export default function ResultPage() {
   const [result, setResult] = useState<Result | null>(null);
@@ -35,7 +37,7 @@ export default function ResultPage() {
       </div>
 
       <p className="text-sm text-gray-600">Total influence across matches: {Math.round(totalPercent * 100)}%</p>
-      <a href="/dashboard" className="inline-block rounded-lg border px-4 py-2">View dashboard</a>
+      <Link href="/dashboard" className="inline-block rounded-lg border px-4 py-2">View dashboard</Link>
     </section>
   );
 }
