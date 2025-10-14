@@ -1,11 +1,11 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* polish */
-:root { 
-  color-scheme: light; 
+:root {
+  color-scheme: light;
 }
-* { 
-  outline-color: #d4af37; 
+* {
+  outline-color: #d4af37;
 }
 
 /* golden shimmer borders */
