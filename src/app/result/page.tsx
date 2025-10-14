@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 
 import { supabase } from '@/lib/supabaseClient';
 
@@ -24,7 +24,7 @@ const transformResultData = (data: any) => {
   };
 };
 
-export default function ResultPage() {
+function ResultContent() {
   const [result, setResult] = useState<ResultData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -111,5 +111,13 @@ export default function ResultPage() {
         <div className='golden-border-content'>View dashboard</div>
       </Link>
     </section>
+  );
+}
+
+export default function ResultPage() {
+  return (
+    <Suspense fallback={<p>Loading result...</p>}>
+      <ResultContent />
+    </Suspense>
   );
 }

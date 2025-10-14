@@ -5,6 +5,37 @@ import { useState } from 'react';
 
 import { supabase } from '@/lib/supabaseClient';
 
+const createMockMatches = () => [
+  {
+    trackTitle: 'Echoes of You',
+    artist: 'Josh Royal',
+    similarity: 0.86,
+    percentInfluence: 0.56,
+  },
+  {
+    trackTitle: 'Midnight Lies',
+    artist: 'Ahna Mac',
+    similarity: 0.81,
+    percentInfluence: 0.3,
+  },
+  {
+    trackTitle: 'Amber Skyline',
+    artist: 'Essyonna',
+    similarity: 0.79,
+    percentInfluence: 0.14,
+  },
+];
+
+const createRoyaltyEvent = (mockMatches: any[]) => ({
+  outputId: crypto.randomUUID(),
+  amountCents: 100,
+  splits: mockMatches.map(m => ({
+    trackTitle: m.trackTitle,
+    artist: m.artist,
+    percent: m.percentInfluence,
+  })),
+});
+
 export default function UploadPage() {
   const [fileName, setFileName] = useState<string>('');
   const [processing, setProcessing] = useState(false);
@@ -34,36 +65,8 @@ export default function UploadPage() {
       // pretend to fingerprint and compare
       await new Promise(resolve => setTimeout(resolve, 1200));
 
-      const mockMatches = [
-        {
-          trackTitle: 'Echoes of You',
-          artist: 'Josh Royal',
-          similarity: 0.86,
-          percentInfluence: 0.56,
-        },
-        {
-          trackTitle: 'Midnight Lies',
-          artist: 'Ahna Mac',
-          similarity: 0.81,
-          percentInfluence: 0.3,
-        },
-        {
-          trackTitle: 'Amber Skyline',
-          artist: 'Essyonna',
-          similarity: 0.79,
-          percentInfluence: 0.14,
-        },
-      ];
-
-      const royaltyEvent = {
-        outputId: crypto.randomUUID(),
-        amountCents: 100,
-        splits: mockMatches.map(m => ({
-          trackTitle: m.trackTitle,
-          artist: m.artist,
-          percent: m.percentInfluence,
-        })),
-      };
+      const mockMatches = createMockMatches();
+      const royaltyEvent = createRoyaltyEvent(mockMatches);
 
       // Step 1: Insert track
       const { data: trackRow, error: tErr } = await supabase
