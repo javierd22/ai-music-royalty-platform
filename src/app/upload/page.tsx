@@ -19,6 +19,15 @@ export default function UploadPage() {
     e.preventDefault();
     if (!fileName) return;
 
+    // Check if environment variables are properly set
+    if (
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co'
+    ) {
+      alert('Supabase configuration missing. Please check environment variables.');
+      return;
+    }
+
     setProcessing(true);
 
     try {

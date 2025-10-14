@@ -18,6 +18,16 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function fetchRoyaltyEvents() {
+      // Check if environment variables are properly set
+      if (
+        !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+        process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co'
+      ) {
+        setError('Supabase configuration missing. Please check environment variables.');
+        setLoading(false);
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from('royalty_events')
