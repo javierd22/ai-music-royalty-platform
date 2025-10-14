@@ -8,6 +8,42 @@
   outline-color: #d4af37; 
 }
 
+/* golden shimmer borders */
+.golden-border {
+  position: relative;
+  background: linear-gradient(45deg, #d4af37, #f4d03f, #d4af37, #b8860b);
+  background-size: 400% 400%;
+  animation: shimmer 3s ease-in-out infinite;
+  padding: 2px;
+  border-radius: 12px;
+}
+
+.golden-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: white;
+  border-radius: 10px;
+  z-index: -1;
+}
+
+.golden-border-content {
+  background: white;
+  border-radius: 10px;
+  padding: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

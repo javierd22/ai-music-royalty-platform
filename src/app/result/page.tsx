@@ -28,16 +28,20 @@ export default function ResultPage() {
 
       <div className="space-y-3">
         {result.mockMatches.map((m, i) => (
-          <div key={i} className="rounded-lg border p-4">
-            <div className="font-medium">{m.trackTitle} by {m.artist}</div>
-            <div>Similarity score: {Math.round(m.similarity * 100)}%</div>
-            <div>Percent influence: {Math.round(m.percentInfluence * 100)}%</div>
+          <div key={i} className="golden-border">
+            <div className="golden-border-content">
+              <div className="font-medium">{m.trackTitle} by {m.artist}</div>
+              <div>Similarity score: {Math.round(m.similarity * 100)}%</div>
+              <div>Percent influence: {Math.round(m.percentInfluence * 100)}%</div>
+            </div>
           </div>
           ))}
       </div>
 
       <p className="text-sm text-gray-600">Total influence across matches: {Math.round(totalPercent * 100)}%</p>
-      <Link href="/dashboard" className="inline-block rounded-lg border px-4 py-2">View dashboard</Link>
+      <Link href="/dashboard" className="golden-border inline-block">
+        <div className="golden-border-content">View dashboard</div>
+      </Link>
     </section>
   );
 }

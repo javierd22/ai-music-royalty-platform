@@ -29,23 +29,27 @@ export default function DashboardPage() {
   return (
     <section className="space-y-6">
       <h1 className="text-2xl font-semibold">Artist dashboard</h1>
-      <div className="rounded-xl border p-4">
-        <div className="text-sm text-gray-600">Lifetime paid plus pending</div>
-        <div className="text-3xl font-bold">{totals.formatted}</div>
+      <div className="golden-border">
+        <div className="golden-border-content">
+          <div className="text-sm text-gray-600">Lifetime paid plus pending</div>
+          <div className="text-3xl font-bold">{totals.formatted}</div>
+        </div>
       </div>
 
       <div className="space-y-3">
         {events.length === 0 && <p>No royalty events yet. Upload an audio file and view the Result first.</p>}
         {events.map((e) => (
-          <div key={e.outputId} className="rounded-lg border p-4">
-            <div className="font-medium">Output {e.outputId.slice(0, 8)}</div>
-            <div>Amount: ${(e.amountCents / 100).toFixed(2)}</div>
-            <div className="mt-2 space-y-1">
-              {e.splits.map((s, i) => (
-                <div key={i} className="text-sm text-gray-700">
-                  {Math.round(s.percent * 100)}% to {s.artist} for {s.trackTitle}
-                </div>
-              ))}
+          <div key={e.outputId} className="golden-border">
+            <div className="golden-border-content">
+              <div className="font-medium">Output {e.outputId.slice(0, 8)}</div>
+              <div>Amount: ${(e.amountCents / 100).toFixed(2)}</div>
+              <div className="mt-2 space-y-1">
+                {e.splits.map((s, i) => (
+                  <div key={i} className="text-sm text-gray-700">
+                    {Math.round(s.percent * 100)}% to {s.artist} for {s.trackTitle}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         ))}
