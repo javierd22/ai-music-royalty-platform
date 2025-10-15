@@ -4,6 +4,8 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Link from 'next/link';
 
+import { EnvCheck } from '@/components/EnvCheck';
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -47,7 +49,10 @@ export default function RootLayout({
             </div>
           </nav>
         </header>
-        <main className='mx-auto max-w-6xl px-4 py-12'>{children}</main>
+        <main className='mx-auto max-w-6xl px-4 py-12'>
+          <EnvCheck />
+          {children}
+        </main>
         <footer className='mx-auto max-w-6xl px-4 py-8 text-xs text-zinc-600'>
           © {new Date().getFullYear()} AI Music Royalty Platform
         </footer>

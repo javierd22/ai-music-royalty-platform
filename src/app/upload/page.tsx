@@ -1,11 +1,16 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { ToastContainer } from '@/components/Toast';
+import { useToast } from '@/hooks/useToast';
 import { supabase } from '@/lib/supabaseClient';
+import { logSupabaseError, validateSupabaseConfig } from '@/lib/utils';
 
-const createMockMatches = () => [
+type Match = { trackTitle: string; artist: string; similarity: number; percentInfluence: number };
+
+const createMockMatches = (): Match[] => [
   {
     trackTitle: 'Echoes of You',
     artist: 'Josh Royal',
@@ -26,7 +31,7 @@ const createMockMatches = () => [
   },
 ];
 
-const createRoyaltyEvent = (mockMatches: any[]) => ({
+const createRoyaltyEvent = (mockMatches: Match[]) => ({
   outputId: crypto.randomUUID(),
   amountCents: 100,
   splits: mockMatches.map(m => ({
@@ -40,22 +45,31 @@ export default function UploadPage() {
   const [fileName, setFileName] = useState<string>('');
   const [processing, setProcessing] = useState(false);
   const router = useRouter();
+  const { toasts, dismissToast, showSuccess, showError, showWarning } = useToast();
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     if (f) setFileName(f.name);
   }
 
+  // Check environment variables on component mount
+  useEffect(() => {
+    const configCheck = validateSupabaseConfig();
+    if (!configCheck.isValid) {
+      showWarning(
+        `Configuration issue: ${configCheck.error}. Some features may not work properly.`
+      );
+    }
+  }, [showWarning]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!fileName) return;
 
     // Check if environment variables are properly set
-    if (
-      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-      process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co'
-    ) {
-      alert('Supabase configuration missing. Please check environment variables.');
+    const configCheck = validateSupabaseConfig();
+    if (!configCheck.isValid) {
+      showError(`Configuration error: ${configCheck.error}`);
       return;
     }
 
@@ -78,7 +92,10 @@ export default function UploadPage() {
         .select()
         .single();
 
-      if (tErr) throw tErr;
+      if (tErr) {
+        logSupabaseError('track insert', tErr);
+        throw tErr;
+      }
 
       // Step 2: Insert result
       const { data: resultRow, error: rErr } = await supabase
@@ -90,7 +107,10 @@ export default function UploadPage() {
         .select()
         .single();
 
-      if (rErr) throw rErr;
+      if (rErr) {
+        logSupabaseError('result insert', rErr);
+        throw rErr;
+      }
 
       // Step 3: Insert royalty event
       const { error: reErr } = await supabase.from('royalty_events').insert({
@@ -99,35 +119,43 @@ export default function UploadPage() {
         splits: royaltyEvent.splits,
       });
 
-      if (reErr) throw reErr;
+      if (reErr) {
+        logSupabaseError('royalty_event insert', reErr);
+        throw reErr;
+      }
 
       // Step 4: Navigate to result page with result_id
+      showSuccess('Analysis complete! Redirecting to results...');
       router.push(`/result?result_id=${resultRow.id}`);
     } catch (error) {
-      console.error('Error saving to database:', error);
-      alert('Error saving data. Please try again.');
+      // Error is already logged by logSupabaseError
+      showError('Error saving data. Please try again.');
     } finally {
       setProcessing(false);
     }
   }
 
   return (
-    <section className='space-y-6'>
-      <h1 className='text-2xl font-semibold'>Upload an audio file</h1>
-      <form onSubmit={handleSubmit} className='space-y-4'>
-        <input type='file' accept='audio/*' onChange={handleFileChange} className='block' />
-        {fileName && <p>Selected: {fileName}</p>}
-        <button
-          type='submit'
-          disabled={!fileName || processing}
-          className='rounded-lg border px-4 py-2 disabled:opacity-50'
-        >
-          {processing ? 'Processing…' : 'Check attribution'}
-        </button>
-      </form>
-      <p className='text-sm text-gray-600'>
-        Upload an audio file to run attribution analysis and save results to the database.
-      </p>
-    </section>
+    <>
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+
+      <section className='space-y-6'>
+        <h1 className='text-2xl font-semibold'>Upload an audio file</h1>
+        <form onSubmit={handleSubmit} className='space-y-4'>
+          <input type='file' accept='audio/*' onChange={handleFileChange} className='block' />
+          {fileName && <p>Selected: {fileName}</p>}
+          <button
+            type='submit'
+            disabled={!fileName || processing}
+            className='rounded-lg border px-4 py-2 disabled:opacity-50'
+          >
+            {processing ? 'Processing…' : 'Check attribution'}
+          </button>
+        </form>
+        <p className='text-sm text-gray-600'>
+          Upload an audio file to run attribution analysis and save results to the database.
+        </p>
+      </section>
+    </>
   );
 }

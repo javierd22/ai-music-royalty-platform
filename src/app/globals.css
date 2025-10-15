@@ -56,6 +56,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --beige: #f5f5dc;
+  --beige-light: #faf9f6;
+  --silver: #c0c0c0;
+  --silver-light: #e8e8e8;
 }
 
 @theme inline {
@@ -73,7 +77,22 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--beige-light);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Beige/silver theme enhancements */
+.golden-border-content {
+  background: var(--beige-light);
+  border-radius: 10px;
+  padding: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Silver accent for secondary elements */
+.silver-accent {
+  background: linear-gradient(45deg, var(--silver-light), var(--silver), var(--silver-light));
+  border: 1px solid var(--silver);
 }
