@@ -22,7 +22,7 @@ const transformResultData = (data: unknown) => {
     matches?: Match[];
     royalty_events?: { total_amount_cents?: number; splits?: unknown[] };
   };
-  
+
   return {
     track: { title: typedData.tracks?.title || 'Unknown' },
     matches: typedData.matches || [],
@@ -73,7 +73,7 @@ function ResultContent() {
         const transformedData = transformResultData(data);
         setResult(transformedData);
       }
-    } catch (error_) {
+    } catch {
       // Error is already logged by logSupabaseError
       setError('Failed to load result');
       showError('Failed to load result data');
@@ -140,7 +140,7 @@ function ResultContent() {
         {/* Matches with enhanced styling */}
         <div className='space-y-3'>
           <h2 className='text-lg font-medium text-gray-800'>Similarity Matches</h2>
-        {result.matches.map((m) => (
+        {result.matches.map(m => (
           <div key={`${m.trackTitle}-${m.artist}`} className='golden-border'>
               <div className='golden-border-content'>
                 <div className='font-medium text-gray-900 mb-2'>

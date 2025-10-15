@@ -43,7 +43,7 @@ export default function DashboardPage() {
           throw error;
         }
         setEvents(data || []);
-      } catch (error_) {
+      } catch {
         // Error is already logged by logSupabaseError
         setError('Failed to load royalty events');
         showError('Failed to load royalty events data');

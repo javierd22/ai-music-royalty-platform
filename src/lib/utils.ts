@@ -35,6 +35,8 @@ export function formatErrorForUser(error: unknown): string {
   return 'An unexpected error occurred';
 }
 
+let messageIdCounter = 0;
+
 export function createToastMessage(type: 'success' | 'error' | 'warning', message: string) {
-  return { type, message, id: Date.now() + Math.random() };
+  return { type, message, id: ++messageIdCounter };
 }

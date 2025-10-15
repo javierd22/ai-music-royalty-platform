@@ -26,27 +26,35 @@ export function ToastComponent({ toast, onDismiss }: ToastProps) {
 
   const getToastStyles = () => {
     switch (toast.type) {
-      case 'success':
+      case 'success': {
         return 'bg-green-50 border-green-200 text-green-800';
-      case 'error':
+      }
+      case 'error': {
         return 'bg-red-50 border-red-200 text-red-800';
-      case 'warning':
+      }
+      case 'warning': {
         return 'bg-yellow-50 border-yellow-200 text-yellow-800';
-      default:
+      }
+      default: {
         return 'bg-gray-50 border-gray-200 text-gray-800';
+      }
     }
   };
 
   const getIconColor = () => {
     switch (toast.type) {
-      case 'success':
+      case 'success': {
         return 'bg-green-500';
-      case 'error':
+      }
+      case 'error': {
         return 'bg-red-500';
-      case 'warning':
+      }
+      case 'warning': {
         return 'bg-yellow-500';
-      default:
+      }
+      default: {
         return 'bg-gray-500';
+      }
     }
   };
 
@@ -55,7 +63,7 @@ export function ToastComponent({ toast, onDismiss }: ToastProps) {
       className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm border ${getToastStyles()}`}
     >
       <div className='flex items-center'>
-        <div className={`w-2 h-2 rounded-full mr-3 ${getIconColor()}`}></div>
+        <div className={`w-2 h-2 rounded-full mr-3 ${getIconColor()}`} />
         <p className='text-sm font-medium flex-1'>{toast.message}</p>
         <button
           onClick={() => onDismiss(toast.id)}

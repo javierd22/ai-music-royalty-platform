@@ -127,7 +127,7 @@ export default function UploadPage() {
       // Step 4: Navigate to result page with result_id
       showSuccess('Analysis complete! Redirecting to results...');
       router.push(`/result?result_id=${resultRow.id}`);
-    } catch (error) {
+    } catch {
       // Error is already logged by logSupabaseError
       showError('Error saving data. Please try again.');
     } finally {

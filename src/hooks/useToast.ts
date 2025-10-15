@@ -2,12 +2,14 @@ import { useCallback, useState } from 'react';
 
 import { Toast, ToastType } from '@/components/Toast';
 
+let toastIdCounter = 0;
+
 export function useToast() {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const addToast = useCallback((type: ToastType, message: string) => {
     const newToast: Toast = {
-      id: Date.now() + Math.random(),
+      id: ++toastIdCounter,
       type,
       message,
     };
