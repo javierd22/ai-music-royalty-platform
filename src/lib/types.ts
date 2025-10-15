@@ -29,14 +29,14 @@ export interface Database {
         Row: {
           id: string;
           track_id: string;
-          matches: any; // JSON array of matches
+          matches: unknown; // JSON array of matches
           created_at: string;
           updated_at: string;
         };
         Insert: {
           id?: string;
           track_id: string;
-          matches: any;
+          matches: unknown;
           created_at?: string;
           updated_at?: string;
         };
@@ -53,7 +53,7 @@ export interface Database {
           id: string;
           result_id: string;
           total_amount_cents: number;
-          splits: any; // JSON array of splits
+          splits: unknown; // JSON array of splits
           created_at: string;
           updated_at: string;
         };
@@ -61,7 +61,7 @@ export interface Database {
           id?: string;
           result_id: string;
           total_amount_cents: number;
-          splits: any;
+          splits: unknown;
           created_at?: string;
           updated_at?: string;
         };

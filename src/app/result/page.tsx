@@ -140,8 +140,8 @@ function ResultContent() {
         {/* Matches with enhanced styling */}
         <div className='space-y-3'>
           <h2 className='text-lg font-medium text-gray-800'>Similarity Matches</h2>
-        {result.matches.map(m => (
-          <div key={`${m.trackTitle}-${m.artist}`} className='golden-border'>
+          {result.matches.map(m => (
+            <div key={`${m.trackTitle}-${m.artist}`} className='golden-border'>
               <div className='golden-border-content'>
                 <div className='font-medium text-gray-900 mb-2'>
                   {m.trackTitle} by {m.artist}
