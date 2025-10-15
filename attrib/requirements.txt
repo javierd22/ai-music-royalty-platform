@@ -1,0 +1,21 @@
+# FastAPI and server dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Audio processing dependencies
+librosa==0.10.1
+numpy==1.24.3
+scipy==1.11.4
+
+# Additional dependencies for librosa
+soundfile==0.12.1
+resampy==0.4.2
+numba==0.58.1
+llvmlite==0.41.1
+
+# Pydantic for data validation
+pydantic==2.5.0
+
+# Optional: for environment variable management
+python-dotenv==1.0.0
