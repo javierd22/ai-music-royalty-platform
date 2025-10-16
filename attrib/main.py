@@ -4,6 +4,8 @@ Minimal FastAPI attribution service for audio file comparison.
 
 import io
 import os
+import uuid
+import traceback
 from typing import List, Dict, Any
 import numpy as np
 import librosa
@@ -131,7 +133,8 @@ def normalize_influences(similarities: List[float]) -> List[float]:
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint."""
-    log_event("health_check", {"status": "ok"})
+    trace_id = str(uuid.uuid4())
+    log_event("HEALTH_CHECK", {"trace_id": trace_id, "status": "ok"})
     return HealthResponse(ok=True)
 
 @app.post("/compare", response_model=CompareResponse)
@@ -139,8 +142,12 @@ async def compare_audio(file: UploadFile = File(...)):
     """
     Compare uploaded audio file against reference catalog.
     """
+    # Generate unique trace ID for this request
+    trace_id = str(uuid.uuid4())
+    
     # Log the start of comparison
-    log_event("comparison_started", {
+    log_event("UPLOAD_STARTED", {
+        "trace_id": trace_id,
         "filename": file.filename,
         "content_type": file.content_type,
         "file_size": 0  # Will be updated after reading
@@ -148,7 +155,8 @@ async def compare_audio(file: UploadFile = File(...)):
     
     # Validate file
     if not file.content_type or not file.content_type.startswith('audio/'):
-        log_event("comparison_error", {
+        log_event("ERROR", {
+            "trace_id": trace_id,
             "error": "invalid_file_type",
             "content_type": file.content_type
         })
@@ -159,20 +167,23 @@ async def compare_audio(file: UploadFile = File(...)):
     file_size = len(file_content)
     
     # Update log with actual file size
-    log_event("comparison_file_loaded", {
+    log_event("FILE_LOADED", {
+        "trace_id": trace_id,
         "filename": file.filename,
         "file_size": file_size
     })
     
     if file_size > 10 * 1024 * 1024:  # 10MB
-        log_event("comparison_error", {
+        log_event("ERROR", {
+            "trace_id": trace_id,
             "error": "file_too_large",
             "file_size": file_size
         })
         raise HTTPException(status_code=400, detail="File size exceeds 10MB limit")
     
     if file_size == 0:
-        log_event("comparison_error", {
+        log_event("ERROR", {
+            "trace_id": trace_id,
             "error": "empty_file"
         })
         raise HTTPException(status_code=400, detail="Empty file")
@@ -213,11 +224,13 @@ async def compare_audio(file: UploadFile = File(...)):
             ))
         
         # Log successful comparison
-        log_event("comparison_completed", {
+        log_event("ATTRIB_JOB_FINISHED", {
+            "trace_id": trace_id,
             "filename": file.filename,
             "matches_count": len(matches),
             "top_similarity": matches[0].similarity if matches else 0,
-            "total_influence": sum(m.percentInfluence for m in matches)
+            "total_influence": sum(m.percentInfluence for m in matches),
+            "score": matches[0].similarity if matches else 0
         })
         
         return CompareResponse(matches=matches)
@@ -226,9 +239,10 @@ async def compare_audio(file: UploadFile = File(...)):
         raise
     except Exception as e:
         # Log the error
-        log_event("comparison_error", {
-            "error": "internal_error",
-            "error_message": str(e),
+        log_event("ERROR", {
+            "trace_id": trace_id,
+            "error": str(e),
+            "trace": traceback.format_exc(),
             "filename": file.filename
         })
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
