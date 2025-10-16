@@ -10,6 +10,7 @@ import librosa
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from utils.logger import log_event
 
 # Initialize FastAPI app
 app = FastAPI(title="Audio Attribution Service", version="1.0.0")
@@ -130,6 +131,7 @@ def normalize_influences(similarities: List[float]) -> List[float]:
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint."""
+    log_event("health_check", {"status": "ok"})
     return HealthResponse(ok=True)
 
 @app.post("/compare", response_model=CompareResponse)
@@ -137,16 +139,42 @@ async def compare_audio(file: UploadFile = File(...)):
     """
     Compare uploaded audio file against reference catalog.
     """
+    # Log the start of comparison
+    log_event("comparison_started", {
+        "filename": file.filename,
+        "content_type": file.content_type,
+        "file_size": 0  # Will be updated after reading
+    })
+    
     # Validate file
     if not file.content_type or not file.content_type.startswith('audio/'):
+        log_event("comparison_error", {
+            "error": "invalid_file_type",
+            "content_type": file.content_type
+        })
         raise HTTPException(status_code=400, detail="File must be an audio file")
     
     # Check file size (10MB limit)
     file_content = await file.read()
-    if len(file_content) > 10 * 1024 * 1024:  # 10MB
+    file_size = len(file_content)
+    
+    # Update log with actual file size
+    log_event("comparison_file_loaded", {
+        "filename": file.filename,
+        "file_size": file_size
+    })
+    
+    if file_size > 10 * 1024 * 1024:  # 10MB
+        log_event("comparison_error", {
+            "error": "file_too_large",
+            "file_size": file_size
+        })
         raise HTTPException(status_code=400, detail="File size exceeds 10MB limit")
     
-    if len(file_content) == 0:
+    if file_size == 0:
+        log_event("comparison_error", {
+            "error": "empty_file"
+        })
         raise HTTPException(status_code=400, detail="Empty file")
     
     try:
@@ -184,11 +212,25 @@ async def compare_audio(file: UploadFile = File(...)):
                 percentInfluence=round(influences[i], 3)
             ))
         
+        # Log successful comparison
+        log_event("comparison_completed", {
+            "filename": file.filename,
+            "matches_count": len(matches),
+            "top_similarity": matches[0].similarity if matches else 0,
+            "total_influence": sum(m.percentInfluence for m in matches)
+        })
+        
         return CompareResponse(matches=matches)
         
     except HTTPException:
         raise
     except Exception as e:
+        # Log the error
+        log_event("comparison_error", {
+            "error": "internal_error",
+            "error_message": str(e),
+            "filename": file.filename
+        })
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 if __name__ == "__main__":

@@ -81,6 +81,25 @@ CREATE POLICY "Allow all operations on results" ON results
 CREATE POLICY "Allow all operations on royalty_events" ON royalty_events
   FOR ALL USING (true) WITH CHECK (true);
 
+-- Create logs table for attribution service logging
+CREATE TABLE IF NOT EXISTS logs (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  event_type TEXT NOT NULL,
+  details JSONB NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create index for logs table
+CREATE INDEX IF NOT EXISTS idx_logs_event_type ON logs(event_type);
+CREATE INDEX IF NOT EXISTS idx_logs_created_at ON logs(created_at);
+
+-- Enable RLS for logs table
+ALTER TABLE logs ENABLE ROW LEVEL SECURITY;
+
+-- Create policy for logs table (allow all operations for service role)
+CREATE POLICY "Allow all operations on logs" ON logs
+  FOR ALL USING (true) WITH CHECK (true);
+
 -- Insert some sample data for testing
 INSERT INTO tracks (title, storage_url) VALUES 
   ('demo-track.mp3', 'local://demo/demo-track.mp3');

@@ -19,3 +19,6 @@ pydantic==2.5.0
 
 # Optional: for environment variable management
 python-dotenv==1.0.0
+
+# Supabase client for logging
+supabase==2.3.4
