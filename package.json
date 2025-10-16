@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "attrib:dev": "cd attrib && uvicorn main:app --reload --port 8000",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier . --write",
@@ -16,6 +17,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.75.0",
     "@vercel/analytics": "^1.5.0",
+    "dotenv": "^17.2.3",
     "next": "15.5.5",
     "react": "19.1.0",
     "react-dom": "19.1.0"
