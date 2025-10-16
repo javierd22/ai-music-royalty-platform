@@ -33,7 +33,7 @@ Choose one platform:
 
 ### 2. Update Next.js App
 
-- [ ] Set `ATTRIB_BASE_URL` in Vercel environment variables to your attribution service URL
+- [ ] Set `NEXT_PUBLIC_ATTRIB_BASE_URL` in Vercel environment variables to your attribution service URL
 - [ ] Ensure URL uses HTTPS in production
 - [ ] Test the upload flow
 
@@ -60,7 +60,7 @@ Choose one platform:
 
 ### Next.js App (Vercel)
 
-- `ATTRIB_BASE_URL`: Your attribution service URL (HTTPS)
+- `NEXT_PUBLIC_ATTRIB_BASE_URL`: Your attribution service URL (HTTPS)
 - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase key
 - `NEXT_PUBLIC_ENVIRONMENT`: Set to `production`

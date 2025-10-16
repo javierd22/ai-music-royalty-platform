@@ -27,13 +27,13 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
 
 # Attribution Engine Configuration
-ATTRIB_BASE_URL=http://localhost:8000
+NEXT_PUBLIC_ATTRIB_BASE_URL=https://ai-music-royalty-platform.onrender.com
 NEXT_PUBLIC_ENVIRONMENT=development
 ```
 
 **Required Environment Variables:**
 
-- `ATTRIB_BASE_URL`: URL of the attribution engine (default: http://localhost:8000)
+- `NEXT_PUBLIC_ATTRIB_BASE_URL`: URL of the attribution engine (production: https://ai-music-royalty-platform.onrender.com)
 - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
 - `NEXT_PUBLIC_ENVIRONMENT`: Set to 'development' for local development

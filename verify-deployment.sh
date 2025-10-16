@@ -64,7 +64,7 @@ fi
 
 echo -e "\n${GREEN}🎉 Basic verification complete!${NC}"
 echo -e "\n${YELLOW}Next steps:${NC}"
-echo "1. Update your Next.js app's ATTRIB_BASE_URL to: $SERVICE_URL"
+echo "1. Update your Next.js app's NEXT_PUBLIC_ATTRIB_BASE_URL to: $SERVICE_URL"
 echo "2. Test the upload flow in your application"
 echo "3. Monitor the service logs for any issues"
 
