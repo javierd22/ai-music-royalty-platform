@@ -30,6 +30,17 @@ attrib/
 attrib-service/
 sdk/
 
+# Exclude server development files but keep essential ones
+server/__pycache__/
+server/*.md
+server/test_*.py
+server/demo_*.py
+server/seed_*.py
+server/verify_*.sql
+server/run_auditor.py
+server/run_auditor.sh
+server/test_*.sh
+
 # Keep server files (don't exclude them)
 # !server/
 # !server/**

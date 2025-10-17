@@ -32,8 +32,8 @@ COPY --from=builder /root/.local /root/.local
 # Copy application code
 COPY server/ .
 
-# Make start script executable
-RUN chmod +x /app/start.sh
+# Make start script executable and verify it exists
+RUN ls -la /app/ && chmod +x /app/start.sh
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
