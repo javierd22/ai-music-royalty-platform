@@ -1,0 +1,59 @@
+# Render Blueprint for AI Music Attribution API
+# https://render.com/docs/blueprint-spec
+
+services:
+  # FastAPI Attribution Service
+  - type: web
+    name: ai-music-attribution-api
+    env: docker
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    plan: starter # Can upgrade to standard/pro
+    region: oregon # Choose: oregon, frankfurt, singapore
+    branch: main
+    healthCheckPath: /health
+    autoDeploy: true
+
+    # Environment variables (set these in Render dashboard)
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: WORKERS
+        value: 2
+      - key: PORT
+        fromService:
+          name: ai-music-attribution-api
+          type: web
+          property: port
+
+      # Secrets - set these in Render dashboard
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: ADMIN_API_KEY
+        sync: false
+      - key: CORS_ALLOW_ORIGINS
+        value: http://localhost:3000
+        # Update after Vercel deployment: https://your-app.vercel.app,http://localhost:3000
+
+      # Optional - uncomment and set in dashboard
+      # - key: QDRANT_URL
+      #   sync: false
+      # - key: PINECONE_API_KEY
+      #   sync: false
+      # - key: OPENAI_API_KEY
+      #   sync: false
+      # - key: BLOCKCHAIN_RPC_URL
+      #   sync: false
+      # - key: BLOCKCHAIN_PRIVATE_KEY
+      #   sync: false
+      # - key: OTEL_EXPORTER_OTLP_ENDPOINT
+      #   sync: false
+# Optional: Add a database if needed
+# databases:
+#   - name: attribution-db
+#     plan: starter
+#     databaseName: attribution
+#     user: attribution_user
+
