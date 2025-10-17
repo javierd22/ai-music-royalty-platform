@@ -13,7 +13,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /build
 
 # Install dependencies
-COPY server/requirements.txt .
+COPY requirements.txt .
 RUN pip install --user --no-warn-script-location -r requirements.txt
 
 # Runtime stage

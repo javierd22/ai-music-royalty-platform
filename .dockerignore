@@ -30,6 +30,6 @@ attrib/
 attrib-service/
 sdk/
 
-# Keep only server files
-!server/
-!server/**
+# Keep server files (don't exclude them)
+# !server/
+# !server/**
