@@ -6,8 +6,8 @@ services:
   - type: web
     name: ai-music-attribution-api
     env: docker
-    dockerfilePath: ./server/Dockerfile
-    dockerContext: ./server
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     plan: free # Free tier - can upgrade to starter/standard/pro later
     region: oregon # Choose: oregon, frankfurt, singapore
     branch: main

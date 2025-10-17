@@ -1,0 +1,35 @@
+# Exclude Next.js frontend files
+src/
+public/
+next.config.ts
+next-env.d.ts
+tsconfig.json
+package.json
+package-lock.json
+node_modules/
+.eslintrc.json
+eslint.config.mjs
+postcss.config.mjs
+tailwind.config.js
+vercel.json
+.vercelignore
+
+# Exclude development files
+.git/
+.gitignore
+README.md
+*.md
+docs/
+.cursor/
+.github/
+scripts/
+monitoring/
+dev-tools/
+tools/
+attrib/
+attrib-service/
+sdk/
+
+# Keep only server files
+!server/
+!server/**
