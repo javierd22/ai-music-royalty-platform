@@ -1,14 +1,19 @@
-# Hide Next.js files from Render to force Docker mode
-package.json
-package-lock.json
-next.config.ts
-next-env.d.ts
-postcss.config.mjs
-tailwind.config.ts
-eslint.config.mjs
-tsconfig.json
-tsconfig.tsbuildinfo
+# Ignore Next.js frontend files for Render deployment
 src/
 public/
+next.config.ts
+next-env.d.ts
+tsconfig.json
+package.json
+package-lock.json
 node_modules/
+.eslintrc.json
+eslint.config.mjs
+postcss.config.mjs
+tailwind.config.js
 vercel.json
+.vercelignore
+
+# Keep only the server directory for deployment
+!server/
+!server/**

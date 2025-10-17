@@ -1,4 +1,4 @@
-# Render Blueprint for AI Music Attribution API
+# Render Blueprint for AI Music Attribution API (Server Only)
 # https://render.com/docs/blueprint-spec
 
 services:
@@ -6,14 +6,13 @@ services:
   - type: web
     name: ai-music-attribution-api
     env: docker
-    dockerfilePath: ./server/Dockerfile
-    dockerContext: ./server
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     plan: free # Free tier - can upgrade to starter/standard/pro later
     region: oregon # Choose: oregon, frankfurt, singapore
     branch: main
     healthCheckPath: /health
     autoDeploy: true
-    buildCommand: '' # Explicitly disable build command detection
 
     # Environment variables (set these in Render dashboard)
     envVars:
@@ -51,10 +50,3 @@ services:
       #   sync: false
       # - key: OTEL_EXPORTER_OTLP_ENDPOINT
       #   sync: false
-# Optional: Add a database if needed
-# databases:
-#   - name: attribution-db
-#     plan: starter
-#     databaseName: attribution
-#     user: attribution_user
-
