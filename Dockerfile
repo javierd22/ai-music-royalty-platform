@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 # Multi-stage build for AI Music Attribution API
 # Optimized for Render deployment
+# Updated: 2025-01-17 - Fixed requirements.txt path
 
 FROM python:3.11-slim as builder
 

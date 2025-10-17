@@ -14,6 +14,7 @@ services:
     healthCheckPath: /health
     autoDeploy: true
     buildCommand: '' # Explicitly disable build command detection
+    # Force rebuild with updated Dockerfile
 
     # Environment variables (set these in Render dashboard)
     envVars:
