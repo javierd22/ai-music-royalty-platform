@@ -44,7 +44,12 @@ export default function UploadPage() {
     });
 
     if (dbError) setStatus(dbError.message);
-    else setStatus('Track uploaded successfully!');
+    else {
+      setStatus('Track uploaded successfully!');
+      setTitle('');
+      setFile(null);
+      setTimeout(() => { window.location.href = '/dashboard'; }, 600);
+    }
     setLoading(false);
   }
 

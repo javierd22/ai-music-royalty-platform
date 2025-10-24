@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient } from '@supabase/ssr';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
@@ -22,14 +22,16 @@ export async function middleware(req: NextRequest) {
     }
   );
 
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  const protectedRoutes = ["/upload", "/dashboard"];
+  const protectedRoutes = ['/upload', '/dashboard'];
   const path = req.nextUrl.pathname;
 
   if (protectedRoutes.includes(path) && !session) {
     const url = req.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = '/login';
     return NextResponse.redirect(url);
   }
   return res;
@@ -37,5 +39,5 @@ export async function middleware(req: NextRequest) {
 
 // Match all routes so we can read the cookie, but skip static assets
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };
