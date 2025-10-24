@@ -48,7 +48,9 @@ export default function UploadPage() {
       setStatus('Track uploaded successfully!');
       setTitle('');
       setFile(null);
-      setTimeout(() => { window.location.href = '/dashboard'; }, 600);
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 600);
     }
     setLoading(false);
   }
