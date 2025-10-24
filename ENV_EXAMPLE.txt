@@ -1,0 +1,193 @@
+# ============================================================================
+# AI Music Royalty Platform - Environment Variables
+# Copy this file to .env.local (dev) or set in your deployment platform
+# ============================================================================
+
+# ============================================================================
+# DEPLOYMENT ENVIRONMENT
+# ============================================================================
+# Options: development, preview, production
+NODE_ENV=development
+
+# Demo mode: prevents real blockchain writes, shows demo banner
+# Set to "true" for staging/demo environments
+DEMO_MODE=false
+
+# ============================================================================
+# SUPABASE (Database & Auth)
+# ============================================================================
+# Get these from https://app.supabase.com/project/_/settings/api
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+
+# Server-side only (NEVER expose in browser)
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
+SUPABASE_URL=https://your-project.supabase.co
+
+# Direct database connection (for migrations/seeds)
+DATABASE_URL=postgresql://postgres:password@db.your-project.supabase.co:5432/postgres
+
+# ============================================================================
+# ATTRIBUTION SERVICE (FastAPI)
+# ============================================================================
+# Public URL for frontend to call (include https:// in production)
+NEXT_PUBLIC_API_URL=http://localhost:8001
+ATTRIB_BASE_URL=http://localhost:8001
+
+# Server-to-server base URL (can be internal/private in production)
+API_BASE_URL=http://localhost:8001
+
+# Port for local development (Railway/Render will override with PORT env var)
+PORT=8001
+
+# ============================================================================
+# VECTOR DATABASE
+# ============================================================================
+# Options: mock, qdrant, pinecone
+VECTOR_DB_TYPE=mock
+
+# For Qdrant (if VECTOR_DB_TYPE=qdrant)
+# QDRANT_URL=http://localhost:6333
+# QDRANT_API_KEY=your-qdrant-api-key
+
+# For Pinecone (if VECTOR_DB_TYPE=pinecone)
+# PINECONE_API_KEY=your-pinecone-api-key
+# PINECONE_ENVIRONMENT=us-west1-gcp
+# PINECONE_INDEX_NAME=music-embeddings
+
+# ============================================================================
+# AUDIO EMBEDDINGS
+# ============================================================================
+# Embedding model: mfcc, openai, custom
+EMBEDDING_MODEL=mfcc
+
+# For OpenAI embeddings (if EMBEDDING_MODEL=openai)
+# OPENAI_API_KEY=sk-your-openai-key-here
+
+# Similarity threshold for attribution matching (0.0 - 1.0)
+SIMILARITY_THRESHOLD=0.85
+
+# Number of top matches to return from vector search
+TOP_K_MATCHES=10
+
+# ============================================================================
+# DUAL PROOF SYSTEM
+# ============================================================================
+# Time window for SDK log and result matching (minutes)
+DUAL_PROOF_WINDOW_MINUTES=10
+
+# Confidence threshold for dual proof confirmation (0.0 - 1.0)
+DUAL_PROOF_THRESHOLD=0.85
+
+# ============================================================================
+# BLOCKCHAIN (Polygon Testnet)
+# ============================================================================
+# Enable/disable blockchain integration
+BLOCKCHAIN_ENABLED=false
+
+# Network: ethereum-sepolia, polygon-mumbai, polygon-mainnet
+BLOCKCHAIN_NETWORK=polygon-mumbai
+
+# RPC endpoint (get from Alchemy, Infura, or public RPC)
+BLOCKCHAIN_RPC_URL=https://rpc-mumbai.maticvigil.com
+
+# Private key for signing transactions (NEVER commit or expose)
+# Generate with: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+BLOCKCHAIN_PRIVATE_KEY=your-64-char-hex-private-key-here
+
+# Chain ID: 11155111 (Sepolia), 80001 (Mumbai), 137 (Polygon Mainnet)
+CHAIN_ID=80001
+
+# ============================================================================
+# SECURITY
+# ============================================================================
+# Rate limiting: max requests per minute per partner
+RATE_LIMIT_TOKENS=60
+RATE_LIMIT_REFILL_RATE=60
+
+# CORS allowed origins (comma-separated)
+CORS_ALLOW_ORIGINS=http://localhost:3000,http://localhost:3001
+
+# Admin API key for /keys management routes
+# Generate with: python -c "import secrets; print(secrets.token_hex(32))"
+ADMIN_API_KEY=your-64-char-hex-admin-key-here
+
+# Content Security Policy directives (set in next.config.ts or vercel.json)
+# CSP_DIRECTIVES=default-src 'self'; script-src 'self' 'unsafe-eval'
+
+# ============================================================================
+# COMPLIANCE & AUDITING
+# ============================================================================
+# Secret for signing compliance reports (HMAC-SHA256)
+# Generate with: python -c "import secrets; print(secrets.token_hex(32))"
+COMPLIANCE_SIGNING_SECRET=your-64-char-hex-secret-here
+
+# ============================================================================
+# REDIS (Optional - for distributed rate limiting and caching)
+# ============================================================================
+# If not set, falls back to in-memory rate limiting
+# REDIS_URL=redis://localhost:6379/0
+# REDIS_TLS_URL=rediss://your-redis-cloud-url:6379
+
+# ============================================================================
+# OBSERVABILITY & LOGGING
+# ============================================================================
+# Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+LOG_LEVEL=INFO
+
+# Structured JSON logging
+LOG_FORMAT=json
+
+# Optional: External log sink (Datadog, Sentry, LogDNA)
+# SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
+# DATADOG_API_KEY=your-datadog-api-key
+
+# ============================================================================
+# MONITORING & TRACING
+# ============================================================================
+# Enable OpenTelemetry distributed tracing
+OTEL_ENABLED=true
+
+# OTLP endpoint for trace export (e.g., Jaeger, Tempo, Datadog)
+# Leave empty to export to console only (local dev)
+# OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
+
+# Export traces to console for debugging (local dev only)
+OTEL_EXPORTER_CONSOLE=false
+
+# Prometheus metrics endpoint (requires admin auth)
+# Access at GET /metrics
+MONITOR_METRICS_ENABLED=true
+
+# Git commit SHA for version tracking (set by CI/CD)
+# GIT_COMMIT_SHA=
+
+# Application version
+APP_VERSION=1.0.0
+
+# ============================================================================
+# MAINTENANCE JOBS
+# ============================================================================
+# Enable automated maintenance tasks
+MAINTENANCE_ENABLED=true
+
+# Job execution intervals (in seconds)
+# cleanup: daily, reverify: hourly, compliance: weekly
+MAINTENANCE_CLEANUP_INTERVAL=86400
+MAINTENANCE_REVERIFY_INTERVAL=3600
+MAINTENANCE_COMPLIANCE_INTERVAL=604800
+
+# Data retention policies
+MAINTENANCE_STALE_RESULTS_DAYS=90
+MAINTENANCE_STALE_NONCES_HOURS=24
+MAINTENANCE_RATE_LIMIT_CLEANUP_HOURS=6
+
+# ============================================================================
+# DEVELOPMENT & TESTING
+# ============================================================================
+# Skip auth in development (use with caution)
+# DEV_SKIP_AUTH=false
+
+# Seed data on startup
+# AUTO_SEED=false
+

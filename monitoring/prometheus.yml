@@ -1,0 +1,77 @@
+# Prometheus Configuration for AI Music Royalty Attribution Platform
+# Scrapes metrics from FastAPI application
+
+global:
+  scrape_interval: 15s # Scrape targets every 15 seconds
+  evaluation_interval: 15s # Evaluate rules every 15 seconds
+  external_labels:
+    cluster: 'ai-music-royalty'
+    environment: 'development'
+
+# Alertmanager configuration (optional)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#           - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+# rule_files:
+#   - "alerts.yml"
+
+# Scrape configurations
+scrape_configs:
+  # ============================================================================
+  # FastAPI Attribution Service
+  # ============================================================================
+  - job_name: 'attribution-api'
+    metrics_path: '/metrics'
+    scheme: http
+    static_configs:
+      - targets: ['host.docker.internal:8001'] # Use host.docker.internal for Mac/Windows
+        labels:
+          service: 'attribution-api'
+          environment: 'local'
+
+    # Add admin API key for authentication
+    basic_auth:
+      username: 'admin'
+      password_file: '/etc/prometheus/admin_password' # Optional, if metrics endpoint is protected
+
+    # Or use header-based auth
+    # params:
+    #   x-admin-key: ['your-admin-key']
+
+  # ============================================================================
+  # Prometheus Self-Monitoring
+  # ============================================================================
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # ============================================================================
+  # Grafana Monitoring (optional)
+  # ============================================================================
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+        labels:
+          service: 'grafana'
+
+  # ============================================================================
+  # Redis Monitoring (if redis_exporter is added)
+  # ============================================================================
+  # - job_name: 'redis'
+  #   static_configs:
+  #     - targets: ['redis-exporter:9121']
+  #       labels:
+  #         service: 'redis'
+# Remote write configuration for long-term storage (optional)
+# remote_write:
+#   - url: "https://prometheus-prod.example.com/api/v1/write"
+#     basic_auth:
+#       username: <username>
+#       password: <password>
+

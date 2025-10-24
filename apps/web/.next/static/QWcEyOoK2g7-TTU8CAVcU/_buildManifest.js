@@ -1,0 +1,1 @@
+globalThis.__BUILD_MANIFEST=function(e){return{__rewrites:{afterFiles:[{has:e,source:"/api/backend/:path*",destination:e}],beforeFiles:[],fallback:[]},"/_error":["static/chunks/pages/_error-deeb844d2074b9d8.js"],sortedPages:["/_app","/_error"]}}(void 0),globalThis.__BUILD_MANIFEST_CB&&globalThis.__BUILD_MANIFEST_CB();

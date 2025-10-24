@@ -1,0 +1,31 @@
+{
+  "name": "@ai-music-royalty/sdk",
+  "version": "1.0.0",
+  "description": "AI Music Royalty Attribution Platform SDK",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest"
+  },
+  "keywords": [
+    "ai",
+    "music",
+    "royalty",
+    "attribution",
+    "c2pa",
+    "provenance"
+  ],
+  "author": "AI Music Royalty Platform",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0"
+  }
+}
