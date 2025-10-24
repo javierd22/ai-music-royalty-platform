@@ -1,7 +1,8 @@
-"use client";
-import { createClient } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+'use client';
+import { createClient } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import AppShell from '../components/AppShell';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,9 +17,12 @@ export default function DashboardPage() {
   useEffect(() => {
     async function fetchData() {
       const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) router.push("/login");
+      if (!userData.user) router.push('/login');
 
-      const { data, error } = await supabase.from("tracks").select("*").order("created_at", { ascending: false });
+      const { data, error } = await supabase
+        .from('tracks')
+        .select('*')
+        .order('created_at', { ascending: false });
       if (!error && data) setTracks(data);
       setLoading(false);
     }
@@ -27,32 +31,38 @@ export default function DashboardPage() {
 
   if (loading)
     return (
-      <main className="flex items-center justify-center min-h-screen bg-[#fdfbf8]">
-        <p>Loading...</p>
-      </main>
+      <AppShell>
+        <div className='flex items-center justify-center min-h-[400px]'>
+          <p>Loading...</p>
+        </div>
+      </AppShell>
     );
 
   return (
-    <main className="min-h-screen bg-[#fdfbf8] text-gray-900 p-8">
-      <h1 className="text-3xl font-semibold mb-6">Your Uploaded Tracks</h1>
-      {tracks.length === 0 ? (
-        <p>No tracks uploaded yet.</p>
-      ) : (
-        <ul className="space-y-4">
-          {tracks.map((t) => (
-            <li key={t.id} className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
-              <p className="font-medium">{t.title}</p>
-              <a
-                href={t.storage_url}
-                target="_blank"
-                className="text-sm text-yellow-700 hover:underline"
-              >
-                View File
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-    </main>
+    <AppShell>
+      <div className='space-y-6'>
+        <h1 className='text-3xl font-semibold'>Your Uploaded Tracks</h1>
+        {tracks.length === 0 ? (
+          <div className='bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center'>
+            <p className='text-gray-500'>No tracks uploaded yet.</p>
+          </div>
+        ) : (
+          <ul className='space-y-4'>
+            {tracks.map(t => (
+              <li key={t.id} className='bg-white rounded-xl shadow-sm border border-gray-100 p-6'>
+                <p className='font-medium text-lg mb-2'>{t.title}</p>
+                <a
+                  href={t.storage_url}
+                  target='_blank'
+                  className='text-sm text-yellow-700 hover:underline'
+                >
+                  View File
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </AppShell>
   );
 }
