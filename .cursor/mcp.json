@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "dev-tools": {
+      "command": "python",
+      "args": ["tools/mcp/dev_tools/server.py"],
+      "transport": "stdio",
+      "env": {}
+    }
+  }
+}

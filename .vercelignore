@@ -1,0 +1,43 @@
+# Backend & Infrastructure
+/server
+/attrib
+/attrib-service
+/monitoring
+/contracts
+
+# Scripts & Tests
+/scripts
+/tests
+__tests__
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+test_*.py
+**/test_*.py
+
+# CI/CD
+/.github
+/docker-compose*.yml
+Dockerfile
+*.dockerfile
+
+# Development
+/.venv
+/venv
+/node_modules/.cache
+*.log
+
+# Documentation (optional - uncomment if you want to exclude)
+# /docs
+# *.md
+# !README.md
+
+# Cache & Build artifacts
+.pytest_cache
+__pycache__
+*.pyc
+.coverage
+coverage/
+.DS_Store
+

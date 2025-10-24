@@ -1,0 +1,70 @@
+{
+  "name": "ai-music-royalty-platform",
+  "version": "0.1.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "attrib:dev": "cd attrib && uvicorn main:app --reload --port 8000",
+    "test:e2e": "npx ts-node scripts/fake_ai_e2e.ts",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "type-check": "tsc --noEmit",
+    "smoke": "chmod +x scripts/smoke.sh && ./scripts/smoke.sh local",
+    "seed": "chmod +x scripts/seed.sh && ./scripts/seed.sh",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.75.0",
+    "@vercel/analytics": "^1.5.0",
+    "axios": "^1.6.0",
+    "dotenv": "^17.2.3",
+    "form-data": "^4.0.0",
+    "next": "15.5.5",
+    "node-fetch": "^2.7.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-hot-toast": "^2.4.1",
+    "recharts": "^2.10.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/form-data": "^2.5.0",
+    "@types/node": "^20",
+    "@types/node-fetch": "^2.6.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.5",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-security": "^3.0.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-sonarjs": "^3.0.5",
+    "eslint-plugin-unicorn": "^61.0.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.4",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^4",
+    "ts-node": "^10.9.0",
+    "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
+}

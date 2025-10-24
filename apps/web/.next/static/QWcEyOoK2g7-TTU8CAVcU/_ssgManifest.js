@@ -1,0 +1,1 @@
+globalThis.__SSG_MANIFEST=new Set([]);globalThis.__SSG_MANIFEST_CB&&globalThis.__SSG_MANIFEST_CB()

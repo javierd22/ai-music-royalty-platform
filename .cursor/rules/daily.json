@@ -1,0 +1,16 @@
+{
+  "name": "Daily Runner",
+  "priority": 100,
+  "description": "Automate the daily build routine. Each morning create today's dated section in DAILY_TASKS.md, execute all tasks using docs/ROLES.md, and only after finishing output a structured summary.",
+  "includes": ["**/*"],
+  "prompts": [
+    "At start, open DAILY_TASKS.md. If no section exists for today's date, create one titled 'Daily Tasks — YYYY-MM-DD' and populate it using the instructions Javier provided for today.",
+    "Each task must include its corresponding role in brackets, e.g. [Role: Backend Engineer]. Use docs/ROLES.md as a reference for each role's conventions and commands.",
+    "Work strictly in order from top to bottom of the daily list. Do not skip tasks unless explicitly blocked, in which case record the reason and evidence.",
+    "After completing each task, write a short, timestamped note to logs/daily/YYYY-MM-DD.md describing what was done, commands used, outputs, and any follow-up notes.",
+    "Run tests after code or configuration changes and resolve any failing results before continuing.",
+    "Do not output the end-of-day report until every task is complete or explicitly blocked with a reason.",
+    "At the end only, output a markdown block titled 'Daily Summary YYYY-MM-DD' listing all tasks, each with a Done/Blocked state, notes, related commits or PRs, and key evidence links.",
+    "Never summarize or output partial progress mid-run. The summary appears only after the full daily checklist is complete."
+  ]
+}
