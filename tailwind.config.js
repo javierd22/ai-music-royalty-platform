@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+/* eslint-env node */
 module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
@@ -9,12 +10,26 @@ module.exports = {
   ],
   safelist: [
     // brand colors + states
-    "bg-yellow-600","hover:bg-yellow-700","text-yellow-700",
+    'bg-yellow-600',
+    'hover:bg-yellow-700',
+    'text-yellow-700',
     // common layout tokens we rely on
-    "rounded-full","rounded-xl","shadow-sm",
-    "border","border-gray-100","border-gray-300",
-    "grid","md:grid-cols-2","gap-8",
-    "flex","items-center","justify-between","space-y-6","p-8","px-5","py-2.5",
+    'rounded-full',
+    'rounded-xl',
+    'shadow-sm',
+    'border',
+    'border-gray-100',
+    'border-gray-300',
+    'grid',
+    'md:grid-cols-2',
+    'gap-8',
+    'flex',
+    'items-center',
+    'justify-between',
+    'space-y-6',
+    'p-8',
+    'px-5',
+    'py-2.5',
   ],
   theme: { extend: {} },
   plugins: [],

@@ -17,3 +17,10 @@ body {
     'Apple Color Emoji',
     'Segoe UI Emoji';
 }
+
+.btn-primary {
+  @apply bg-yellow-600 hover:bg-yellow-700 text-white;
+}
+.btn-outline {
+  @apply border border-gray-300 hover:bg-gray-50 text-gray-900;
+}

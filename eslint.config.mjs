@@ -179,6 +179,15 @@ export default [
   },
   {
     files: ['**/*.config.{js,mjs,ts}', '**/next.config.*'],
+    languageOptions: {
+      globals: {
+        module: 'writable',
+        require: 'readonly',
+        exports: 'writable',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+      },
+    },
     rules: {
       'import/no-anonymous-default-export': 'off',
     },
