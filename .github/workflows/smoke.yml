@@ -4,25 +4,45 @@ on:
     branches: ['main']
   schedule:
     - cron: '0 7 * * *' # 07:00 UTC = 09:00 Europe/Madrid
+
+env:
+  MAIN: ${{ secrets.MAIN_API_URL }} # e.g. https://ai-music-royalty-platform.vercel.app/api/main
+  ATTR: ${{ secrets.ATTR_API_URL }} # e.g. https://ai-music-royalty-platform.vercel.app/api/attrib
+
 jobs:
   smoke:
     runs-on: ubuntu-latest
     steps:
-      - name: Check Main API health
+      - name: Main /health
         run: |
-          set -e
-          code=$(curl -s -o /dev/null -w "%{http_code}" "${{ secrets.MAIN_API_URL }}/health")
-          test "$code" = "200"
-      - name: Check Main API version
+          url="$MAIN/health"
+          echo "GET $url"
+          code=$(curl -sS -o /dev/null -w "%{http_code}" "$url")
+          echo "HTTP $code"
+          if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
+            echo "Health check failed"; exit 1; fi
+
+      - name: Main /version
         run: |
-          set -e
-          curl -fsSL "${{ secrets.MAIN_API_URL }}/version" | grep -E "^[0-9]+\.[0-9]+\.[0-9]+$"
-      - name: Check Attribution API health
+          url="$MAIN/version"
+          echo "GET $url"
+          body=$(curl -sS "$url" | tr -d '\r\n"' )
+          echo "Body: $body"
+          echo "$body" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "Bad version"; exit 1; }
+
+      - name: Attrib /health
         run: |
-          set -e
-          code=$(curl -s -o /dev/null -w "%{http_code}" "${{ secrets.ATTR_API_URL }}/health")
-          test "$code" = "200"
-      - name: Check Attribution API version
+          url="$ATTR/health"
+          echo "GET $url"
+          code=$(curl -sS -o /dev/null -w "%{http_code}" "$url")
+          echo "HTTP $code"
+          if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
+            echo "Health check failed"; exit 1; fi
+
+      - name: Attrib /version
         run: |
-          set -e
-          curl -fsSL "${{ secrets.ATTR_API_URL }}/version" | grep -E "^[0-9]+\.[0-9]+\.[0-9]+$"
+          url="$ATTR/version"
+          echo "GET $url"
+          body=$(curl -sS "$url" | tr -d '\r\n"' )
+          echo "Body: $body"
+          echo "$body" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "Bad version"; exit 1; }
