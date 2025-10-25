@@ -4,31 +4,41 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 );
+
+async function handleLogout() {
+  await supabase.auth.signOut();
+  location.href = '/';
+}
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     let mounted = true;
-    supabase.auth.getSession().then(({ data }) => {
-      if (mounted) setLoggedIn(!!data.session);
-    });
+
+    const initializeAuth = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (mounted) setLoggedIn(!!data.session);
+      } catch {
+        // Handle auth error silently
+      }
+    };
+
+    initializeAuth();
+
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       setLoggedIn(!!session);
     });
+
     return () => {
       mounted = false;
       sub.subscription.unsubscribe();
     };
   }, []);
-
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    location.href = '/';
-  }
 
   return (
     <div className='min-h-screen bg-[#fdfbf8] text-gray-900 flex flex-col'>
@@ -44,14 +54,17 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <Link href='/dashboard' className='hover:text-yellow-700'>
             Dashboard
           </Link>
-          {!loggedIn ? (
-            <Link href='/login' className='hover:text-yellow-700'>
-              Login
-            </Link>
-          ) : (
+          <Link href='/health' className='hover:text-yellow-700'>
+            Health
+          </Link>
+          {loggedIn ? (
             <button onClick={handleLogout} className='hover:text-yellow-700'>
               Logout
             </button>
+          ) : (
+            <Link href='/login' className='hover:text-yellow-700'>
+              Login
+            </Link>
           )}
         </nav>
       </header>
