@@ -1,13 +1,14 @@
 name: Smoke
 on:
+  workflow_dispatch:
   push:
     branches: ['main']
   schedule:
-    - cron: '0 7 * * *' # 07:00 UTC = 09:00 Europe/Madrid
+    - cron: '0 7 * * *'
 
 env:
-  MAIN: ${{ secrets.MAIN_API_URL }} # e.g. https://ai-music-royalty-platform.vercel.app/api/main
-  ATTR: ${{ secrets.ATTR_API_URL }} # e.g. https://ai-music-royalty-platform.vercel.app/api/attrib
+  MAIN: ${{ secrets.MAIN_API_URL }}
+  ATTR: ${{ secrets.ATTR_API_URL }}
 
 jobs:
   smoke:
@@ -21,7 +22,6 @@ jobs:
           echo "HTTP $code"
           if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
             echo "Health check failed"; exit 1; fi
-
       - name: Main /version
         run: |
           url="$MAIN/version"
@@ -29,7 +29,6 @@ jobs:
           body=$(curl -sS "$url" | tr -d '\r\n"' )
           echo "Body: $body"
           echo "$body" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "Bad version"; exit 1; }
-
       - name: Attrib /health
         run: |
           url="$ATTR/health"
@@ -38,7 +37,6 @@ jobs:
           echo "HTTP $code"
           if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
             echo "Health check failed"; exit 1; fi
-
       - name: Attrib /version
         run: |
           url="$ATTR/version"
