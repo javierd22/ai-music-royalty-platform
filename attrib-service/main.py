@@ -27,7 +27,13 @@ app.add_middleware(
 # Health check endpoint
 @app.get("/health")
 async def health_check():
-    return {"ok": True}
+    return {"status": "ok"}
+
+# Version endpoint
+@app.get("/version")
+async def get_version():
+    version = os.environ.get("APP_VERSION", "0.1.0")
+    return version
 
 # router mount for royalties
 try:

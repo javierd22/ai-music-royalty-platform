@@ -137,6 +137,12 @@ async def health_check():
     log_event("HEALTH_CHECK", {"trace_id": trace_id, "status": "ok"})
     return HealthResponse(ok=True)
 
+@app.get("/version")
+async def get_version():
+    """Version endpoint."""
+    version = os.environ.get("APP_VERSION", "0.1.0")
+    return version
+
 @app.post("/compare", response_model=CompareResponse)
 async def compare_audio(file: UploadFile = File(...)):
     """

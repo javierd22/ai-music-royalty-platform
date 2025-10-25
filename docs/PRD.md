@@ -282,3 +282,59 @@ If a task would violate any item above, stop and print "Blocked by Execution Con
 - Lint passes. Types compile. No console errors in Home.
 - API endpoints respond with the types defined above.
 - Schema migrations apply on a clean database.
+
+---
+
+## Tailwind v4 Reference Note (UI Framework Addendum)
+
+### Overview
+
+This project now uses **Tailwind CSS v4** (active as of the latest deployment).  
+Unlike Tailwind v3, version 4 eliminates the need for `@tailwind base/components/utilities` imports and the `tailwind.config.js` file, unless advanced customization is needed.  
+All styling is defined directly through **the `@theme` directive** and **custom tokens**.
+
+### Implementation in Our Codebase
+
+The global stylesheet is located at `app/globals.css`.
+
+It begins with:
+
+```css
+@import 'tailwindcss';
+
+@theme {
+  --color-yellow-600: #ca8a04;
+  --color-slate-900: #0f172a;
+  --color-slate-700: #334155;
+  --color-emerald-500: #10b981;
+}
+```
+
+### Rules for Future Development
+
+- Always import Tailwind via `@import "tailwindcss";`
+- Never use the old `@tailwind base; @tailwind components; @tailwind utilities;` syntax.
+- Define new color or spacing tokens inside the `@theme { }` block in globals.css before using them in JSX.
+- Example:
+  ```css
+  @theme {
+    --color-royal-blue: #4169e1;
+  }
+  ```
+  Then, you can safely use `bg-royal-blue`, `text-royal-blue`, etc.
+- If you encounter a "Cannot apply unknown utility class" error, it means that utility's token was not declared in the theme.
+- Keep the token naming convention consistent with Tailwind v3 palettes, e.g. `--color-zinc-200`, `--color-emerald-500`, etc.
+- No config file needed — Tailwind automatically scans all files under `/app` and `/components`.
+- Do not override Tailwind defaults in postcss.config.js or add legacy configs — v4 handles this automatically.
+
+### Verification
+
+- Run `npm run build` to confirm successful compilation after adding any new token.
+- Check Vercel logs for PostCSSSyntaxError or "unknown utility" messages.
+
+### Notes
+
+- Tailwind v4 ships faster compilation and native CSS nesting.
+- Use utility classes as normal — the color tokens in `@theme` map directly to standard classnames like `bg-yellow-600`.
+
+_Last updated: 2025-01-27_
