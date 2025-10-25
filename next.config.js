@@ -10,6 +10,7 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
     NEXT_PUBLIC_ATTRIBUTION_BASE_URL: process.env.NEXT_PUBLIC_ATTRIBUTION_BASE_URL,
+    NEXT_PUBLIC_PARTNER_API_KEY: process.env.NEXT_PUBLIC_PARTNER_API_KEY,
   },
 };
 module.exports = nextConfig;

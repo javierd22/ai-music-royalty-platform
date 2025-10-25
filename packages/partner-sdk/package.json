@@ -1,0 +1,23 @@
+{
+  "name": "@ai-music-royalty-platform/partner-sdk",
+  "version": "0.1.0",
+  "description": "Partner SDK for AI Music Royalty Attribution Platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "ai",
+    "music",
+    "royalty",
+    "attribution",
+    "sdk"
+  ],
+  "author": "AI Music Royalty Platform",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
