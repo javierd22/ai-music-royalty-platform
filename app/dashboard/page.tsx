@@ -3,7 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 
 import AppShell from '../components/AppShell';
+import ProvenanceModal from '../components/ProvenanceModal';
 import SimilaritySection from '../components/SimilaritySection';
+import { useToast } from '../components/ToastProvider';
 import UploadSection from '../components/UploadSection';
 
 const supabase = createClient(
@@ -13,7 +15,7 @@ const supabase = createClient(
 
 type Match = { trackTitle: string; artist: string; similarity: number; percentInfluence: number };
 type Result = { id: string; track_id: string; matches: Match[]; created_at: string };
-type Track = { id: string; title: string; storage_url: string; created_at: string };
+type Track = { id: string; title: string; audio_url: string; created_at: string; user_id?: string };
 type SimilarityMatch = { id: string; title: string; score: number };
 
 export default function DashboardPage() {
@@ -26,9 +28,32 @@ export default function DashboardPage() {
   const [uploadTitle, setUploadTitle] = useState('');
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [checkFile, setCheckFile] = useState<File | null>(null);
+  const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
+  const [showProvenance, setShowProvenance] = useState(false);
+  const { showToast } = useToast();
+
+  const validateFile = (file: File): string | null => {
+    if (!file.type.startsWith('audio/')) {
+      return 'Please select an audio file';
+    }
+    if (file.size > 50 * 1024 * 1024) {
+      // 50MB limit
+      return 'File size must be less than 50MB';
+    }
+    return null;
+  };
 
   const handleUpload = async () => {
-    if (!uploadFile || !uploadTitle) return;
+    if (!uploadFile || !uploadTitle) {
+      showToast('Please provide both title and file', 'error');
+      return;
+    }
+
+    const validationError = validateFile(uploadFile);
+    if (validationError) {
+      showToast(validationError, 'error');
+      return;
+    }
 
     setUploading(true);
     try {
@@ -54,20 +79,28 @@ export default function DashboardPage() {
         // Reset form
         setUploadTitle('');
         setUploadFile(null);
-        alert('Track uploaded successfully!');
+        showToast('Track uploaded successfully!', 'success');
       } else {
-        alert(`Upload failed: ${result.error}`);
+        showToast(`Upload failed: ${result.error}`, 'error');
       }
-    } catch (error) {
-      console.error('Upload error:', error);
-      alert('Upload failed');
+    } catch {
+      showToast('Upload failed - please try again', 'error');
     } finally {
       setUploading(false);
     }
   };
 
   const handleCheckSimilarity = async () => {
-    if (!checkFile) return;
+    if (!checkFile) {
+      showToast('Please select a file to check', 'error');
+      return;
+    }
+
+    const validationError = validateFile(checkFile);
+    if (validationError) {
+      showToast(validationError, 'error');
+      return;
+    }
 
     setChecking(true);
     try {
@@ -83,15 +116,20 @@ export default function DashboardPage() {
 
       if (result.matches) {
         setSimilarityResults(result.matches);
+        showToast(`Found ${result.matches.length} similar tracks`, 'success');
       } else {
-        alert(`Check failed: ${result.error}`);
+        showToast(`Check failed: ${result.error}`, 'error');
       }
-    } catch (error) {
-      console.error('Check error:', error);
-      alert('Check failed');
+    } catch {
+      showToast('Check failed - please try again', 'error');
     } finally {
       setChecking(false);
     }
+  };
+
+  const handleViewProvenance = (track: Track) => {
+    setSelectedTrack(track);
+    setShowProvenance(true);
   };
 
   useEffect(() => {
@@ -120,7 +158,10 @@ export default function DashboardPage() {
       }
       // sort each group newest first
       for (const k of Object.keys(grouped)) {
-        grouped[k].sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at));
+        const group = grouped[k];
+        if (group) {
+          group.sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at));
+        }
       }
       setResultsByTrack(grouped);
       setLoading(false);
@@ -157,63 +198,117 @@ export default function DashboardPage() {
           similarityResults={similarityResults}
         />
 
-        {/* Your Tracks Section */}
-        <div>
-          <h2 className='text-2xl font-semibold mb-4'>Your Uploaded Tracks</h2>
+        {/* My Tracks Section */}
+        <div className='bg-white rounded-2xl shadow-sm border border-gray-100 p-6'>
+          <div className='flex items-center justify-between mb-6'>
+            <h2 className='text-2xl font-semibold text-slate-900'>My Tracks</h2>
+            <div className='text-sm text-gray-600'>
+              {tracks.length} track{tracks.length === 1 ? '' : 's'}
+            </div>
+          </div>
+
           {tracks.length === 0 ? (
-            <p className='text-gray-600'>
-              No tracks yet. Upload your first track above to get started!
-            </p>
+            <div className='text-center py-12'>
+              <div className='w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4'>
+                <svg
+                  className='w-8 h-8 text-gray-400'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3'
+                  />
+                </svg>
+              </div>
+              <p className='text-gray-600 mb-2'>No tracks yet</p>
+              <p className='text-sm text-gray-500'>Upload your first track above to get started!</p>
+            </div>
           ) : (
-            <ul className='space-y-4'>
-              {tracks.map(t => (
-                <li key={t.id} className='bg-white rounded-xl shadow-sm border border-gray-100 p-5'>
-                  <div className='flex items-center justify-between'>
-                    <div>
-                      <p className='font-medium'>{t.title}</p>
-                      <a
-                        href={t.storage_url}
-                        target='_blank'
-                        className='text-sm text-yellow-700 underline'
-                        rel='noreferrer'
-                      >
-                        Open file
-                      </a>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+              {tracks.map(track => (
+                <div
+                  key={track.id}
+                  className='bg-gray-50 rounded-xl p-4 border border-gray-200 hover:shadow-md transition-shadow'
+                >
+                  <div className='flex items-start justify-between mb-3'>
+                    <div className='flex-1 min-w-0'>
+                      <h3 className='font-semibold text-slate-900 truncate'>{track.title}</h3>
+                      <p className='text-sm text-gray-600 mt-1'>
+                        {new Date(track.created_at).toLocaleDateString()}
+                      </p>
                     </div>
-                    <a
-                      href={`/tracks/${t.id}`}
-                      className='px-3 py-1.5 border rounded-full text-sm hover:bg-gray-50'
-                    >
-                      View details
-                    </a>
+                    <div className='ml-2 flex-shrink-0'>
+                      <div className='w-2 h-2 bg-emerald-500 rounded-full' title='Verified' />
+                    </div>
                   </div>
 
-                  <div className='mt-4'>
-                    <p className='text-sm text-gray-600 mb-2'>Latest attribution</p>
-                    {resultsByTrack[t.id]?.length ? (
-                      <ul className='space-y-1 text-sm'>
-                        {resultsByTrack[t.id][0].matches.map((m, i) => (
-                          <li key={`${t.id}-${i}`} className='flex flex-wrap gap-2'>
-                            <span className='font-medium'>{m.trackTitle}</span> by {m.artist}
-                            <span className='opacity-70'>
-                              • similarity {Math.round(m.similarity * 100)}%
-                            </span>
-                            <span className='opacity-70'>
-                              • influence {Math.round(m.percentInfluence)}%
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
+                  <div className='space-y-2'>
+                    <div className='flex items-center justify-between text-sm'>
+                      <span className='text-gray-600'>Track ID</span>
+                      <span className='font-mono text-xs text-gray-500'>
+                        {track.id.slice(0, 8)}...
+                      </span>
+                    </div>
+
+                    {resultsByTrack[track.id]?.length ? (
+                      <div className='bg-white rounded-lg p-3 border'>
+                        <p className='text-xs font-medium text-gray-700 mb-2'>Latest Attribution</p>
+                        <div className='space-y-1'>
+                          {resultsByTrack[track.id][0].matches.slice(0, 2).map((m, i) => (
+                            <div
+                              key={`${track.id}-match-${i}`}
+                              className='flex items-center justify-between text-xs'
+                            >
+                              <span className='truncate'>{m.trackTitle}</span>
+                              <span className='text-emerald-600 font-medium'>
+                                {Math.round(m.similarity * 100)}%
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     ) : (
-                      <p className='text-sm text-gray-500'>No results yet</p>
+                      <div className='bg-gray-100 rounded-lg p-3 text-center'>
+                        <p className='text-xs text-gray-500'>No attribution results yet</p>
+                      </div>
                     )}
                   </div>
-                </li>
+
+                  <div className='flex space-x-2 mt-4'>
+                    <button
+                      onClick={() => handleViewProvenance(track)}
+                      className='flex-1 px-3 py-2 bg-slate-900 text-white text-sm rounded-lg hover:bg-slate-800 transition-colors'
+                    >
+                      View Provenance
+                    </button>
+                    <a
+                      href={track.audio_url}
+                      target='_blank'
+                      rel='noreferrer'
+                      className='px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors'
+                    >
+                      Listen
+                    </a>
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </div>
       </div>
+
+      <ProvenanceModal
+        track={selectedTrack}
+        isOpen={showProvenance}
+        onClose={() => {
+          setShowProvenance(false);
+          setSelectedTrack(null);
+        }}
+      />
     </AppShell>
   );
 }
